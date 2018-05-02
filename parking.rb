@@ -52,7 +52,11 @@ class ParkingLotLevel
   def print
     level = ""
     @parking_spots.each do |parking_spot|
-      level << "#{parking_spot.size} "
+      if parking_spot.occupied?
+        level << "X "
+      else
+        level << "#{parking_spot.size} "
+      end
     end
     puts level
   end
@@ -111,25 +115,29 @@ if $PROGRAM_NAME == __FILE__
       parking_lot.add_parking_spot_to_level(level_number, parking_spot_size)
     end
   end
-
+  puts "Parking Lot:"
   parking_lot.print
+  puts "------------------"
 
   while(true)
-    puts "input the size of the car you would like to park, or type in 'q' to quit"
+    puts "Input the size of the car you would like to park,\n\t'p' to see available parking spots,\n\tor type in 'q' to quit:"
     car_size = $stdin.gets.chomp
     if car_size == 'q'
       break
-    end
-    car_size = car_size.to_i
-    current_car = Car.new(car_size)
-
-    found_parking_spot = parking_lot.find_parking_spot(current_car)
-    if found_parking_spot
-      puts "parking spot found, it's size is: #{found_parking_spot.size}"
-      parking_lot.add_car_to_parking_spot(current_car, found_parking_spot)
-      puts "Your car has been successfully parked!"
+    elsif car_size == 'p'
+      parking_lot.print
     else
-      puts "sorry, no parking spots available for that car size"
+      car_size = car_size.to_i
+      current_car = Car.new(car_size)
+  
+      found_parking_spot = parking_lot.find_parking_spot(current_car)
+      if found_parking_spot
+        puts "parking spot found, it's size is: #{found_parking_spot.size}"
+        parking_lot.add_car_to_parking_spot(current_car, found_parking_spot)
+        puts "Your car has been successfully parked!"
+      else
+        puts "sorry, no parking spots available for that car size"
+      end
     end
     puts "--------------------------"
   end
