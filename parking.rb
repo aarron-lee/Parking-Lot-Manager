@@ -51,6 +51,27 @@ class ParkingLot
   private
 
   def calculate_optimal_multicar(cars, max_size=50)
+    valid_car_combos = calculate_valid_car_combos(cars)
+    optimal_car_combo = calculate_max_profitable_combo(valid_car_combos)
+    return optimal_car_combo
+  end
+
+  def calculate_max_profitable_combo(car_combos)
+    max_profit = 0
+    optimal_car_combo = []
+    car_combos.each do |car_combo|
+      profit = car_combo.reduce(0) do |sum, car|
+        car.parking_cost + sum
+      end
+      if profit > max_profit
+        max_profit = profit
+        optimal_car_combo = car_combo
+      end
+    end
+    optimal_car_combo
+  end
+
+  def calculate_valid_car_combos(cars)
     car_combos = []
     cars.length.times do |i|
       car_combos += cars.combination(i).to_a
@@ -61,19 +82,7 @@ class ParkingLot
       end
       net_car_sizes <= 50
     end
-    
-    max_profit = 0
-    optimal_car_combo = []
-    valid_car_combos.each do |car_combo|
-      profit = car_combo.reduce(0) do |sum, car|
-        car.parking_cost + sum
-      end
-      if profit > max_profit
-        max_profit = profit
-        optimal_car_combo = car_combo
-      end
-    end
-    return optimal_car_combo
+    valid_car_combos
   end
 end
 
