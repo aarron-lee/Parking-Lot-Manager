@@ -22,12 +22,16 @@ class ParkingLot
     false
   end
 
-  def find_parking_spot(car)
+  def find_parking_spot_by_size(size)
     @parking_levels.each do |parking_level|
-      parking_spot = parking_level.find_parking_spot(car.size)
+      parking_spot = parking_level.find_parking_spot(size)
       return parking_spot if !parking_spot.nil?
     end
     nil
+  end
+
+  def find_parking_spot(car)
+    find_parking_spot_by_size(car.size)
   end
 
   def add_car_to_parking_spot(car, parking_spot)
@@ -42,7 +46,7 @@ class ParkingLot
 
   def find_optimal_multicar_combination(cars)
     if parking_spot_exists? 50
-      calculate_optimal_multicar(cars)
+      return calculate_optimal_multicar(cars)
     else
       return nil
     end
@@ -56,13 +60,24 @@ class ParkingLot
       car_combos += cars.combination(i).to_a
     end
     valid_car_combos = car_combos.select do |combo|
-      cost = combo.reduce(0) do |sum, car|
+      net_car_sizes = combo.reduce(0) do |sum, car|
         car.size + sum
       end
-      cost <= 50
+      net_car_sizes <= 50
     end
-    puts "car combos: #{car_combos}"
-    puts "valid car combos: #{valid_car_combos}"
+    
+    max_profit = 0
+    optimal_car_combo = []
+    valid_car_combos.each do |car_combo|
+      profit = car_combo.reduce(0) do |sum, car|
+        car.parking_cost + sum
+      end
+      if profit > max_profit
+        max_profit = profit
+        optimal_car_combo = car_combo
+      end
+    end
+    return optimal_car_combo
   end
 end
 
@@ -111,7 +126,7 @@ class ParkingSpot
     @occupied
   end
 
-  def park_car(*car)
+  def park_car(car)
     @occupied = true
     @current_car = car
   end
@@ -135,6 +150,10 @@ class Car
     @size = size
     @brand = brand || BRANDS.sample
     @parking_cost = BRAND_PARKING_COST[@brand] || DEFAULT_PARKING_COST
+  end
+
+  def parking_cost
+    @parking_cost
   end
 
   def size
@@ -179,7 +198,15 @@ if $PROGRAM_NAME == __FILE__
       while(true)
         car_info = $stdin.gets.chomp
         if car_info == 's'
-          parking_lot.find_optimal_multicar_combination(cars)
+          optimal_car_combo = parking_lot.find_optimal_multicar_combination(cars)
+          if optimal_car_combo.length > 0
+            puts "optimal profit value is: $#{optimal_car_combo.reduce(0){|profit, car| profit + car.parking_cost} }"
+            found_parking_spot = parking_lot.find_parking_spot_by_size(50)
+            parking_lot.add_car_to_parking_spot(optimal_car_combo, found_parking_spot)
+            puts "cars have been parked!"
+          else
+            puts "no valid multicar combination found"
+          end
           break
         else
           car_size, car_brand = car_info.split(" ")
