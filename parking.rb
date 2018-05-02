@@ -39,6 +39,31 @@ class ParkingLot
       parking_level.print
     end
   end
+
+  def find_optimal_multicar_combination(cars)
+    if parking_spot_exists? 50
+      calculate_optimal_multicar(cars)
+    else
+      return nil
+    end
+  end
+
+  private
+
+  def calculate_optimal_multicar(cars, max_size=50)
+    car_combos = []
+    cars.length.times do |i|
+      car_combos += cars.combination(i).to_a
+    end
+    valid_car_combos = car_combos.select do |combo|
+      cost = combo.reduce(0) do |sum, car|
+        car.size + sum
+      end
+      cost <= 50
+    end
+    puts "car combos: #{car_combos}"
+    puts "valid car combos: #{valid_car_combos}"
+  end
 end
 
 class ParkingLotLevel
@@ -103,10 +128,13 @@ end
 
 class Car
   BRANDS = ["Dodge", "Jaguar", "Mercedes", "Audi"].freeze
+  BRAND_PARKING_COST = {"Dodge" => 50, "Jaguar" => 170, "Mercedes" => 100, "Audi" => 30}
+  DEFAULT_PARKING_COST = 10
   def initialize(size, brand=nil)
     raise "invalid size" if size <= 0
     @size = size
     @brand = brand || BRANDS.sample
+    @parking_cost = BRAND_PARKING_COST[@brand] || DEFAULT_PARKING_COST
   end
 
   def size
@@ -114,22 +142,21 @@ class Car
   end
 end
 
-# helper functions for command line program
-def seed_random_data(parking_lot)
-  parking_lot.number_of_levels.times do |level_number|
-    random_parking_spot_sizes = []
-    5.times do
-      random_parking_spot_sizes.push(ParkingSpot::SIZES.sample)
-    end
-    random_parking_spot_sizes.each do |parking_spot_size|
-      parking_lot.add_parking_spot_to_level(level_number, parking_spot_size)
-    end
-  end
-end
 
 
 # Command Line program
 if $PROGRAM_NAME == __FILE__
+  def seed_random_data(parking_lot)
+    parking_lot.number_of_levels.times do |level_number|
+      random_parking_spot_sizes = []
+      5.times do
+        random_parking_spot_sizes.push(ParkingSpot::SIZES.sample)
+      end
+      random_parking_spot_sizes.each do |parking_spot_size|
+        parking_lot.add_parking_spot_to_level(level_number, parking_spot_size)
+      end
+    end
+  end
   number_of_levels = ARGV[0] ? ARGV[0].to_i : 4
   parking_lot = ParkingLot.new(number_of_levels)
 
@@ -152,12 +179,12 @@ if $PROGRAM_NAME == __FILE__
       while(true)
         car_info = $stdin.gets.chomp
         if car_info == 's'
+          parking_lot.find_optimal_multicar_combination(cars)
           break
         else
           car_size, car_brand = car_info.split(" ")
           cars.push(Car.new(car_size.to_i, car_brand))
         end
-        
       end
     elsif car_size.to_i > 0
       car_size = car_size.to_i
