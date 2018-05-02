@@ -14,6 +14,14 @@ class ParkingLot
     @parking_levels[level_number].add_parking_spot(parking_spot_size)
   end
 
+  def parking_spot_exists?(size)
+    @parking_levels.each do |parking_level|
+      parking_spot = parking_level.find_parking_spot(size)
+      return true if !parking_spot.nil?
+    end
+    false
+  end
+
   def find_parking_spot(car)
     @parking_levels.each do |parking_level|
       parking_spot = parking_level.find_parking_spot(car.size)
@@ -78,7 +86,7 @@ class ParkingSpot
     @occupied
   end
 
-  def park_car(car)
+  def park_car(*car)
     @occupied = true
     @current_car = car
   end
@@ -132,12 +140,25 @@ if $PROGRAM_NAME == __FILE__
   puts "------------------"
 
   while(true)
-    puts "Input the size of the car you would like to park,\n\t'p' to see available parking spots,\n\tor type in 'q' to quit:"
+    puts "Input the size of the car you would like to park,\n\t'm' if multiple cars arrived at the gate,\n\t'p' to see available parking spots,\n\tor type in 'q' to quit:"
     car_size = $stdin.gets.chomp
     if car_size == 'q'
       break
     elsif car_size == 'p'
       parking_lot.print
+    elsif car_size == 'm'
+      puts "type in each car size and brand, as SIZE BRAND, followed by the 'Enter' key\n\t(e.g. '15 Dodge', or '45 Jaguar').\ntype in 's' to stop adding cars"
+      cars = []
+      while(true)
+        car_info = $stdin.gets.chomp
+        if car_info == 's'
+          break
+        else
+          car_size, car_brand = car_info.split(" ")
+          cars.push(Car.new(car_size.to_i, car_brand))
+        end
+        
+      end
     elsif car_size.to_i > 0
       car_size = car_size.to_i
       current_car = Car.new(car_size)
