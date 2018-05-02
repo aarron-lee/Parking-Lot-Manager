@@ -86,9 +86,31 @@ if $PROGRAM_NAME == __FILE__
   number_of_levels = ARGV[0] ? ARGV[0].to_i : 4
   parking_lot = ParkingLot.new(number_of_levels)
 
-  for(i = 0; i < number_of_levels; i++) do
-    
+  number_of_levels.times do |level_number|
+    random_parking_spot_sizes = []
+    5.times do
+      random_parking_spot_sizes.push(Random.rand(1..100))
+    end
+    random_parking_spot_sizes.each do |parking_spot_size|
+      add_parking_spot_to_level(level_number, parking_spot_size)
+    end
   end
 
+  while(true)
+    puts "input the size of the car you would like to park, or type in 'q' to quit"
+    car_size = $stdin.gets.chomp
+    if car_size == 'q'
+      break
+    end
+    car_size = car_size.to_i
+    current_car = Car.new(car_size)
 
+    found_parking_spot = parking_lot.find_parking_spot(current_car)
+    if found_parking_spot
+      parking_lot.add_car_to_parking_spot(current_car, found_parking_spot)
+      puts "Your car has been successfully parked!"
+    else
+      puts "sorry, no parking spots available for that car size"
+    end
+  end
 end
