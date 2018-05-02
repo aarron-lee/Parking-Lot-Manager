@@ -40,12 +40,11 @@ RSpec.describe ParkingLot do
   it "finds an optimal combo for multicar parking" do
     parking_lot = ParkingLot.new(5)
     parking_lot.add_parking_spot_to_level(1, 50)
-    cars = []
 
     car_values = [ [15, "Dodge"], [45, "Jaguar"], [10, "Mercedes"], [20, "Audi"] ]
 
-    car_values.each do |values|
-      cars.push(Car.new(values[0], values[1]))
+    cars = car_values.map do |values|
+      Car.new(values[0], values[1])
     end
 
     optimal_car_combo = parking_lot.find_optimal_multicar_combination(cars)
