@@ -41,7 +41,7 @@ cars have been parked!
 
 ### Available parking spots
 
-By typing in 'p', you should see a print out of the parking lot levels with 'X' on any spots that are occupied. Each level is represented by a row, and the numbers are the parking lot sizes.
+By typing in 'p', you should see a print out of the parking lot levels with 'X' on any spots that are occupied. Each level is represented by a row, and the numbers are the parking spot sizes.
 
 e.g.
 
