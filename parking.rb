@@ -94,6 +94,7 @@ end
 
 class Car
   def initialize(size)
+    raise "invalid size" if size <= 0
     @size = size
   end
 
@@ -102,11 +103,9 @@ class Car
   end
 end
 
-if $PROGRAM_NAME == __FILE__
-  number_of_levels = ARGV[0] ? ARGV[0].to_i : 4
-  parking_lot = ParkingLot.new(number_of_levels)
-
-  number_of_levels.times do |level_number|
+# helper functions for command line program
+def seed_random_data(parking_lot)
+  parking_lot.number_of_levels.times do |level_number|
     random_parking_spot_sizes = []
     5.times do
       random_parking_spot_sizes.push(Random.rand(1..100))
@@ -115,6 +114,16 @@ if $PROGRAM_NAME == __FILE__
       parking_lot.add_parking_spot_to_level(level_number, parking_spot_size)
     end
   end
+end
+
+
+# Command Line program
+if $PROGRAM_NAME == __FILE__
+  number_of_levels = ARGV[0] ? ARGV[0].to_i : 4
+  parking_lot = ParkingLot.new(number_of_levels)
+
+  seed_random_data(parking_lot)
+
   puts "Parking Lot:"
   parking_lot.print
   puts "------------------"
@@ -126,7 +135,7 @@ if $PROGRAM_NAME == __FILE__
       break
     elsif car_size == 'p'
       parking_lot.print
-    else
+    elsif car_size.to_i > 0
       car_size = car_size.to_i
       current_car = Car.new(car_size)
   
@@ -138,6 +147,8 @@ if $PROGRAM_NAME == __FILE__
       else
         puts "sorry, no parking spots available for that car size"
       end
+    else
+      puts "invalid input, try again"
     end
     puts "--------------------------"
   end
