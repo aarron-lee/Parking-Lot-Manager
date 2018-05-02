@@ -63,6 +63,7 @@ class ParkingLotLevel
 end
 
 class ParkingSpot
+  SIZES = [10, 15, 20, 25, 30, 35, 40, 45, 50].freeze
   def initialize(size)
     @size = size
     @occupied = false
@@ -108,7 +109,7 @@ def seed_random_data(parking_lot)
   parking_lot.number_of_levels.times do |level_number|
     random_parking_spot_sizes = []
     5.times do
-      random_parking_spot_sizes.push(Random.rand(1..100))
+      random_parking_spot_sizes.push(ParkingSpot::SIZES.sample)
     end
     random_parking_spot_sizes.each do |parking_spot_size|
       parking_lot.add_parking_spot_to_level(level_number, parking_spot_size)
