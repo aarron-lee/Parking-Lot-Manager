@@ -186,18 +186,18 @@ if $PROGRAM_NAME == __FILE__
   puts "------------------"
 
   while(true)
-    puts "Input the size of the car you would like to park,\n\t'm' if multiple cars arrived at the gate,\n\t'p' to see available parking spots,\n\tor type in 'q' to quit:"
+    puts "Input the size of the car you would like to park,\n\tOR\n\t'm' for multicar parking,\n\t'p' to see available parking spots,\n\t'q' to quit:"
     car_size = $stdin.gets.chomp
     if car_size == 'q'
       break
     elsif car_size == 'p'
       parking_lot.print
     elsif car_size == 'm'
-      puts "type in each car size and brand, as SIZE BRAND, followed by the 'Enter' key\n\t(e.g. '15 Dodge', or '45 Jaguar').\ntype in 's' to stop adding cars"
+      puts "type in each car size and brand, as SIZE BRAND, followed by the 'Enter' key\n\t(e.g. '15 Dodge', or '45 Jaguar').\ntype in 'stop' to stop adding cars"
       cars = []
       while(true)
         car_info = $stdin.gets.chomp
-        if car_info == 's'
+        if car_info == 'stop'
           optimal_car_combo = parking_lot.find_optimal_multicar_combination(cars)
           if optimal_car_combo.length > 0
             puts "optimal profit value is: $#{optimal_car_combo.reduce(0){|profit, car| profit + car.parking_cost} }"
