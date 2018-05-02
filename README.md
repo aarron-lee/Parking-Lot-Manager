@@ -11,7 +11,8 @@ You can provide an additional command line arg for to specify the number of park
 
 Once you start the program, you will be prompted with the following:
 
-```Input the size of the car you would like to park,
+```
+Input the size of the car you would like to park,
   OR
   'm' for multicar parking,
   'p' to see available parking spots,
@@ -27,15 +28,11 @@ e.g.
 ```
 type in each car size and brand, as SIZE BRAND, followed by the 'Enter' key (e.g. '15 Dodge', or '45 Jaguar').
 type in 'stop' to stop adding cars
-
-> 15 Dodge
-> 45 Jaguar
-> 10 Mercedes
-> 20 Audi
-> stop
->
+ 15 Dodge
+ 45 Jaguar
+ 10 Mercedes
+ 20 Audi
+ stop
+optimal profit value is: $180
+cars have been parked!
 ```
-
-This should print out the optimal profit, and park the cars.
-e.g.
-`optimal profit value is: $180, cars have been parked!`
