@@ -15,11 +15,7 @@ class ParkingLot
   end
 
   def parking_spot_exists?(size)
-    @parking_levels.each do |parking_level|
-      parking_spot = parking_level.find_parking_spot(size)
-      return true if !parking_spot.nil?
-    end
-    false
+    find_parking_spot_by_size(size) ? true : false
   end
 
   def find_parking_spot_by_size(size)
