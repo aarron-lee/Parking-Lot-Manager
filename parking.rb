@@ -17,12 +17,19 @@ class ParkingLot
   def find_parking_spot(car)
     @parking_levels.each do |parking_level|
       parking_spot = parking_level.find_parking_spot(car.size)
-      return parking_spot if parking_spot
+      return parking_spot if !parking_spot.nil?
     end
+    nil
   end
 
   def add_car_to_parking_spot(car, parking_spot)
     parking_spot.park_car(car)
+  end
+
+  def print
+    @parking_levels.each do |parking_level|
+      parking_level.print
+    end
   end
 end
 
@@ -39,6 +46,15 @@ class ParkingLotLevel
     @parking_spots.each do |parking_spot|
       return parking_spot if parking_spot.size >= size && !parking_spot.occupied?
     end
+    nil
+  end
+
+  def print
+    level = ""
+    @parking_spots.each do |parking_spot|
+      level << "#{parking_spot.size} "
+    end
+    puts level
   end
 end
 
@@ -92,9 +108,11 @@ if $PROGRAM_NAME == __FILE__
       random_parking_spot_sizes.push(Random.rand(1..100))
     end
     random_parking_spot_sizes.each do |parking_spot_size|
-      add_parking_spot_to_level(level_number, parking_spot_size)
+      parking_lot.add_parking_spot_to_level(level_number, parking_spot_size)
     end
   end
+
+  parking_lot.print
 
   while(true)
     puts "input the size of the car you would like to park, or type in 'q' to quit"
@@ -107,10 +125,12 @@ if $PROGRAM_NAME == __FILE__
 
     found_parking_spot = parking_lot.find_parking_spot(current_car)
     if found_parking_spot
+      puts "parking spot found, it's size is: #{found_parking_spot.size}"
       parking_lot.add_car_to_parking_spot(current_car, found_parking_spot)
       puts "Your car has been successfully parked!"
     else
       puts "sorry, no parking spots available for that car size"
     end
+    puts "--------------------------"
   end
 end
