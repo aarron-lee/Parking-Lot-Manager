@@ -6,6 +6,8 @@ Basic Parking Lot Management software for coding challenge @ Cipherhealth
 
 run `bundle install`, followed by `rspec` to run tests
 
+### Command Line Program
+
 For an interactive program, run in terminal:
 `ruby parking.rb`
 
