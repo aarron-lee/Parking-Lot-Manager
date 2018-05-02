@@ -181,6 +181,8 @@ if $PROGRAM_NAME == __FILE__
       end
     end
   end
+
+  
   number_of_levels = ARGV[0] ? ARGV[0].to_i : 4
   parking_lot = ParkingLot.new(number_of_levels)
 
