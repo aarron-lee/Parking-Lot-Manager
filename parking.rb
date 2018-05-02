@@ -94,9 +94,11 @@ class ParkingSpot
 end
 
 class Car
-  def initialize(size)
+  BRANDS = ["Dodge", "Jaguar", "Mercedes", "Audi"].freeze
+  def initialize(size, brand=nil)
     raise "invalid size" if size <= 0
     @size = size
+    @brand = brand || BRANDS.sample
   end
 
   def size
